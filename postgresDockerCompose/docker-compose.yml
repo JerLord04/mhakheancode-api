@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:14-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - ~/apps/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=mhakhean_code_local
+      - POSTGRES_USER=mhakhean_code_local
+      - POSTGRES_DB=mhakhean_code_local

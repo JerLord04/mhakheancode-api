@@ -58,3 +58,23 @@ func (p *PostsController) CreatePosts(c *fiber.Ctx) error {
 	}
 
 }
+
+func (p *PostsController) GetPosts(c *fiber.Ctx) error {
+	id := c.Query("id")
+	idToNumber, _ := strconv.Atoi(id)
+	data, err := p.PostsPort.Get(int32(idToNumber))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(
+			utils.Response{
+				Status:  true,
+				Paylaod: err,
+			})
+	}
+	fmt.Printf(data.MdHTMLText)
+	return c.Status(fiber.StatusOK).JSON(
+		utils.Response{
+			Status:  true,
+			Paylaod: data,
+		})
+
+}

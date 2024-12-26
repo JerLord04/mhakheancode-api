@@ -12,6 +12,16 @@ type PostsDomain struct {
 	Externalsource externalsource.ConvertMdToHtml
 }
 
+// Get implements services.PostsPort.
+func (p *PostsDomain) Get(id int32) (*model.Post, error) {
+	data, err := p.PostRepository.Get(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
+
 func (p *PostsDomain) CreatePosts(userId int, tag string, topicName string, fileByteArray []byte) bool {
 	html := p.Externalsource.ConvertMdToHtml(fileByteArray)
 	contentText := string(fileByteArray)

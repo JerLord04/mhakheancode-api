@@ -12,8 +12,15 @@ type PostsDomain struct {
 	Externalsource externalsource.ConvertMdToHtml
 }
 
-// Get implements services.PostsPort.
-func (p *PostsDomain) Get(id int32) (*model.Post, error) {
+func (p *PostsDomain) GetPostsList() (*[]model.Post, error) {
+	data, err := p.PostRepository.GetPostList()
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+func (p *PostsDomain) GetById(id int32) (*model.Post, error) {
 	data, err := p.PostRepository.Get(id)
 	if err != nil {
 		return nil, err

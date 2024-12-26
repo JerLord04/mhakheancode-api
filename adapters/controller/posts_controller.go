@@ -20,7 +20,6 @@ func (p *PostsController) CreatePosts(c *fiber.Ctx) error {
 	tag := c.Query("tag")
 	title := c.Query("title")
 	file, err := c.FormFile("file")
-	fmt.Println("====> %s", file.Filename)
 	fileName := strings.Split(file.Filename, ".")
 	if fileName[1] != "md" {
 		return c.Status(fiber.StatusInternalServerError).JSON(
@@ -59,10 +58,10 @@ func (p *PostsController) CreatePosts(c *fiber.Ctx) error {
 
 }
 
-func (p *PostsController) GetPosts(c *fiber.Ctx) error {
+func (p *PostsController) GetPostsById(c *fiber.Ctx) error {
 	id := c.Query("id")
 	idToNumber, _ := strconv.Atoi(id)
-	data, err := p.PostsPort.Get(int32(idToNumber))
+	data, err := p.PostsPort.GetById(int32(idToNumber))
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(
 			utils.Response{
@@ -76,5 +75,20 @@ func (p *PostsController) GetPosts(c *fiber.Ctx) error {
 			Status:  true,
 			Paylaod: data,
 		})
+}
 
+func (p *PostsController) GetPostsList(c *fiber.Ctx) error {
+	data, err := p.PostsPort.GetPostsList()
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(
+			utils.Response{
+				Status:  true,
+				Paylaod: err,
+			})
+	}
+	return c.Status(fiber.StatusOK).JSON(
+		utils.Response{
+			Status:  true,
+			Paylaod: data,
+		})
 }

@@ -18,5 +18,6 @@ func NewPostsRouter(group fiber.Router, db *gorm.DB) {
 	}
 
 	group.Get("/create", postController.CreatePosts)
-	group.Get("/get", postController.GetPosts)
+	group.Get("/get", postController.GetPostsById)
+	group.Get("/getPostsList", postController.GetPostsList)
 }

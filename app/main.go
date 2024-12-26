@@ -6,6 +6,7 @@ import (
 	"mhakheancode/api/routs"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 func main() {
@@ -19,10 +20,12 @@ func main() {
 		AppName:       "mhakheancode-api",
 	})
 
+	app.Use(cors.New())
+
 	loadentities.MigrationExistData(&config.PostgresDB)
 
 	routs.Setup(app, &config.PostgresDB)
 
-	app.Listen(":3000")
+	app.Listen(":3001")
 
 }

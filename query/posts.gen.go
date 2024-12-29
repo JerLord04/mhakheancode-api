@@ -36,6 +36,7 @@ func newPost(db *gorm.DB, opts ...gen.DOOption) post {
 	_post.CreatedAt = field.NewTime(tableName, "created_at")
 	_post.UpdatedAt = field.NewTime(tableName, "updated_at")
 	_post.PostImage = field.NewString(tableName, "post_image")
+	_post.MinRead = field.NewString(tableName, "min_read")
 
 	_post.fillFieldMap()
 
@@ -55,6 +56,7 @@ type post struct {
 	CreatedAt   field.Time
 	UpdatedAt   field.Time
 	PostImage   field.String
+	MinRead     field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -80,6 +82,7 @@ func (p *post) updateTableName(table string) *post {
 	p.CreatedAt = field.NewTime(table, "created_at")
 	p.UpdatedAt = field.NewTime(table, "updated_at")
 	p.PostImage = field.NewString(table, "post_image")
+	p.MinRead = field.NewString(table, "min_read")
 
 	p.fillFieldMap()
 
@@ -96,7 +99,7 @@ func (p *post) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (p *post) fillFieldMap() {
-	p.fieldMap = make(map[string]field.Expr, 9)
+	p.fieldMap = make(map[string]field.Expr, 10)
 	p.fieldMap["id"] = p.ID
 	p.fieldMap["user_id"] = p.UserID
 	p.fieldMap["tag"] = p.Tag
@@ -106,6 +109,7 @@ func (p *post) fillFieldMap() {
 	p.fieldMap["created_at"] = p.CreatedAt
 	p.fieldMap["updated_at"] = p.UpdatedAt
 	p.fieldMap["post_image"] = p.PostImage
+	p.fieldMap["min_read"] = p.MinRead
 }
 
 func (p post) clone(db *gorm.DB) post {

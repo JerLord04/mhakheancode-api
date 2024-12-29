@@ -11,10 +11,20 @@ type PostsRepositoryImpl struct {
 	db *gorm.DB
 }
 
-// GetPostList implements repository.PostRepository.
-func (p *PostsRepositoryImpl) GetPostList() (*[]model.Post, error) {
+func (p *PostsRepositoryImpl) GetAllPosts() (*[]model.Post, error) {
 	var posts []model.Post
 	err := p.db.Raw(`select id,user_id,tag,topics_name,md_plain_text,md_html_text,created_at,updated_at
+	from posts p 
+	order by created_at desc`).Scan(&posts).Error
+	if err != nil {
+		return nil, err
+	}
+	return &posts, nil
+}
+
+func (p *PostsRepositoryImpl) GetPostList() (*[]model.Post, error) {
+	var posts []model.Post
+	err := p.db.Raw(`select id,user_id,tag,topics_name,md_plain_text,md_html_text,created_at,updated_at,post_image,min_read
 		from posts p 
 		order by created_at desc
 		limit 5`).Scan(&posts).Error

@@ -13,11 +13,13 @@ import (
 func NewPostsRouter(group fiber.Router, db *gorm.DB) {
 	repo := repositoryimpl.NewPostsRepositoryImpl(db)
 	externalSource := externalsource.NewConvertMdToHtmlStruct()
+	inputSteamManage := externalsource.NewByteArrayToImageStruct()
 	postController := &controller.PostsController{
-		PostsPort: domain.NewPostsDomain(repo, externalSource),
+		PostsPort: domain.NewPostsDomain(repo, externalSource, inputSteamManage),
 	}
 
 	group.Get("/create", postController.CreatePosts)
 	group.Get("/get", postController.GetPostsById)
 	group.Get("/getPostsList", postController.GetPostsList)
+	group.Get("/getAllPosts", postController.GetPagingPosts)
 }

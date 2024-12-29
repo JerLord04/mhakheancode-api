@@ -2,7 +2,6 @@ package controller
 
 import (
 	"fmt"
-	"io/ioutil"
 	"mhakheancode/api/ports/services"
 	"mhakheancode/api/utils"
 	"strconv"
@@ -20,6 +19,8 @@ func (p *PostsController) CreatePosts(c *fiber.Ctx) error {
 	tag := c.Query("tag")
 	title := c.Query("title")
 	file, err := c.FormFile("file")
+	image, err := c.FormFile("image")
+	minRead := c.Query("minRead")
 	fileName := strings.Split(file.Filename, ".")
 	if fileName[1] != "md" {
 		return c.Status(fiber.StatusInternalServerError).JSON(
@@ -31,17 +32,8 @@ func (p *PostsController) CreatePosts(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	fileByteArray, err := file.Open()
-	if err != nil {
-		return err
-	}
-	fileByteArray.Close()
-	openFile, err := ioutil.ReadAll(fileByteArray)
-	if err != nil {
-		return err
-	}
 	userIdToNumber, _ := strconv.Atoi(userId)
-	res := p.PostsPort.CreatePosts(userIdToNumber, tag, title, openFile)
+	res := p.PostsPort.CreatePosts(userIdToNumber, tag, title, file, image, minRead)
 	if res {
 		return c.Status(fiber.StatusOK).JSON(
 			utils.Response{
@@ -79,6 +71,23 @@ func (p *PostsController) GetPostsById(c *fiber.Ctx) error {
 
 func (p *PostsController) GetPostsList(c *fiber.Ctx) error {
 	data, err := p.PostsPort.GetPostsList()
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(
+			utils.Response{
+				Status:  true,
+				Paylaod: err,
+			})
+	}
+	return c.Status(fiber.StatusOK).JSON(
+		utils.Response{
+			Status:  true,
+			Paylaod: data,
+		})
+}
+
+func (p *PostsController) GetPagingPosts(c *fiber.Ctx) error {
+	data, err := p.PostsPort.GetPagingPosts()
+
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(
 			utils.Response{

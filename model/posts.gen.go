@@ -21,6 +21,7 @@ type Post struct {
 	CreatedAt   time.Time `gorm:"column:created_at;default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt   time.Time `gorm:"column:updated_at;default:CURRENT_TIMESTAMP" json:"updated_at"`
 	PostImage   string    `gorm:"column:post_image" json:"post_image"`
+	MinRead     string    `gorm:"column:min_read" json:"min_read"`
 }
 
 // TableName Post's table name

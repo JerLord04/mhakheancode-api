@@ -10,4 +10,6 @@ func Setup(app *fiber.App, db *gorm.DB) {
 	NewHandShakeRouter(api)
 	post := app.Group("/posts")
 	NewPostsRouter(post, db)
+	tag := app.Group("/tags")
+	NewTagsRouter(tag, db)
 }

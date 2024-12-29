@@ -18,17 +18,20 @@ import (
 var (
 	Q    = new(Query)
 	Post *post
+	Tag  *tag
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
 	Post = &Q.Post
+	Tag = &Q.Tag
 }
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
 		db:   db,
 		Post: newPost(db, opts...),
+		Tag:  newTag(db, opts...),
 	}
 }
 
@@ -36,6 +39,7 @@ type Query struct {
 	db *gorm.DB
 
 	Post post
+	Tag  tag
 }
 
 func (q *Query) Available() bool { return q.db != nil }
@@ -44,6 +48,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
 		db:   db,
 		Post: q.Post.clone(db),
+		Tag:  q.Tag.clone(db),
 	}
 }
 
@@ -59,16 +64,19 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
 		db:   db,
 		Post: q.Post.replaceDB(db),
+		Tag:  q.Tag.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
 	Post IPostDo
+	Tag  ITagDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
 		Post: q.Post.WithContext(ctx),
+		Tag:  q.Tag.WithContext(ctx),
 	}
 }
 

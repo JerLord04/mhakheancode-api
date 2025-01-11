@@ -2,7 +2,6 @@ package main
 
 import (
 	"mhakheancode/api/bootstrap"
-	loadentities "mhakheancode/api/load_entities"
 	"mhakheancode/api/routs"
 
 	"github.com/gofiber/fiber/v2"
@@ -22,10 +21,10 @@ func main() {
 
 	app.Use(cors.New())
 
-	loadentities.MigrationExistData(&config.PostgresDB)
+	// loadentities.MigrationExistData(&config.PostgresDB)
 
 	routs.Setup(app, &config.PostgresDB)
 
-	app.Listen(":3001")
+	app.Listen(":3000")
 
 }

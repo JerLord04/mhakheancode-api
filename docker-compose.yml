@@ -1,0 +1,14 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: go_app
+    ports:
+      - "3002:3002"
+    networks:
+      - shared_network
+
+networks:
+  shared_network:
+    external: true
